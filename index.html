@@ -3,18 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Simple Website</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Storage Access</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        button { padding: 10px 20px; font-size: 16px; }
+        #fileList { margin-top: 20px; }
+    </style>
 </head>
 <body>
-    <header>
-        <h1>Welcome to My Website</h1>
-    </header>
-    <nav>
-        <a href="#">Home</a> | <a href="#">About</a> | <a href="#">Contact</a>
-    </nav>
-    <section>
-        <p>This is a basic website created using HTML and CSS.</p>
-    </section>
+
+    <h2>Allow Storage Access</h2>
+    <button onclick="requestAccess()">Give Permission</button>
+    <ul id="fileList"></ul>
+
+    <script>
+        async function requestAccess() {
+            try {
+                const dirHandle = await window.showDirectoryPicker();
+                const fileList = document.getElementById("fileList");
+                fileList.innerHTML = "<h3>Files Available:</h3>";
+
+                for await (const entry of dirHandle.values()) {
+                    if (entry.kind === "file") {
+                        const li = document.createElement("li");
+                        li.textContent = entry.name;
+                        fileList.appendChild(li);
+                    }
+                }
+
+                alert("Storage access granted!");
+            } catch (error) {
+                alert("Access denied or not supported on this browser.");
+            }
+        }
+    </script>
+
 </body>
 </html>
+
